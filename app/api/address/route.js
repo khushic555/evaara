@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
+export const dynamic = 'force-dynamic';
 
 // Fallback pool connection allocation to prevent hot-reload memory leaks
 const prisma = global.prisma || new PrismaClient();

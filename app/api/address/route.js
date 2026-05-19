@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
+
 export const dynamic = 'force-dynamic';
 
 // Fallback pool connection allocation to prevent hot-reload memory leaks
@@ -8,7 +9,7 @@ const prisma = global.prisma || new PrismaClient();
 if (process.env.NODE_ENV !== "production") global.prisma = prisma;
 
 // 🟢 1. FETCH ADDRESSES (GET)
-export async function GET() {
+export async function GET(request) {
   try {
     const authUser = await currentUser();
     if (!authUser) {
@@ -37,14 +38,14 @@ export async function GET() {
 }
 
 // 🟢 2. SAVE AN ADDRESS (POST)
-export async function POST(req) {
+export async function POST(request) {
   try {
     const authUser = await currentUser();
     if (!authUser) {
       return NextResponse.json({ error: "Unauthorized access token" }, { status: 401 });
     }
 
-    const body = await req.json();
+    const body = await request.json();
     const { fullName, phone, address, city, state, pincode, country } = body;
 
     // Direct data verification pass

@@ -18,16 +18,24 @@ export default function ProfileDashboard() {
     setMounted(true);
   }, []);
 
-// 2. Fetch saved addresses securely
+  // 2. Fetch saved addresses securely
   useEffect(() => {
     if (isSignedIn && mounted) {
-      fetch("/api/address")
+      fetch("/api/address", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
         .then(async (res) => {
-          // Read as text first to safeguard against empty bodies or server crashes
           const text = await res.text();
-          if (!res.ok) {
-            throw new Error(text || "Server returned an error flag");
+          
+          // If the response is not ok, or if it unexpectedly returned an HTML page (like a login redirect)
+          if (!res.ok || text.startsWith("<!DOCTYPE")) {
+            console.error("ℹ️ Server returned a non-JSON response structure:", text.substring(0, 100));
+            throw new Error("Failed to load backend address payload cleanly.");
           }
+          
           return text ? JSON.parse(text) : [];
         })
         .then((data) => {

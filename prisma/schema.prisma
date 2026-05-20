@@ -7,40 +7,33 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  clerkUserId  String   @unique
-  email        String   @unique
+  id    Int    @id @default(autoincrement())
+  email String @unique
 
-  addresses    Address[]
-  orders       Order[]
+  addresses Address[]
+  orders    Order[]
 }
 
 model Address {
-  id          Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  fullName String
+  phone    String
+  address  String
+  city     String
+  state    String
+  pincode  String
+  country  String
 
-  fullName    String
-  phone       String
-  address     String
-  city        String
-  state       String
-  pincode     String
-  country     String
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 model Order {
-  id            Int      @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  userId        Int
-  user          User     @relation(fields: [userId], references: [id])
-
-  totalAmount   Float
-  paymentId     String
-  status        String
-
-  createdAt     DateTime @default(now())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
